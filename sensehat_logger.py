@@ -55,14 +55,12 @@ try:
     while True:
         if display_temp:
             value = sense.get_temperature()
-            text = f"Temp: {value:.1f}C"
         else:
             value = sense.get_humidity()
-            text = f"Humidity: {value:.1f}%"
-        sense.show_message(
-            text, scroll_speed=0.08, text_colour=[255, 255, 255], back_colour=[0, 0, 0]
-        )
-        time.sleep(1)
+        value_str = f"{value:.1f}"
+        for char in value_str:
+            sense.show_letter(char, text_colour=[255, 255, 255], back_colour=[0, 0, 0])
+            time.sleep(0.7)
 except KeyboardInterrupt:
     sense.clear()
     print("Exiting...")
