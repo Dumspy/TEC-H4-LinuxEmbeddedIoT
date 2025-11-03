@@ -1,7 +1,7 @@
 # IoTEmbedded Project Makefile
 # Usage: make setup
 
-.PHONY: all setup copy-temp start-service stop-service
+.PHONY: all setup copy-temp start-service stop-service manpage
 
 all: copy-temp start-service stop-service
 	@echo "All steps complete."
@@ -9,7 +9,7 @@ all: copy-temp start-service stop-service
 setup:
 	@echo "Updating apt and installing sense-hat..."
 	sudo apt-get update
-	sudo apt-get install -y sense-hat
+	sudo apt-get install -y sense-hat pandoc
 	@echo "Sense Hat installed successfully"
 	@echo "Making sensehat_logger.py executable..."
 	chmod +x sensehat_logger.py
@@ -39,3 +39,11 @@ stop-service:
 	@echo "Stopping sensehat_logger service..."
 	sudo systemctl stop sensehat_logger.service
 	@echo "sensehat_logger service stopped."
+
+manpage:
+	@echo "Generating and installing man page from sensehat_logger.1.md..."
+	pandoc -s -t man sensehat_logger.1.md -o sensehat_logger.1
+	@echo "Man page generated as sensehat_logger.1"
+	@echo "Installing man page to /usr/share/man/man1/..."
+	sudo cp sensehat_logger.1 /usr/share/man/man1/sensehat_logger.1
+	@echo "Man page installed. You can now use 'man sensehat_logger'"
