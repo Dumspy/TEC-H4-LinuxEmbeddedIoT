@@ -1,14 +1,25 @@
 #! /bin/python
 
+import argparse
 from sense_hat import SenseHat
 import time
 import signal
 import sys
 
+parser = argparse.ArgumentParser(description="Sense HAT temp/humidity display")
+parser.add_argument(
+    "-p",
+    choices=["temp", "fugt"],
+    help="Start mode: temp or fugt",
+    default="temp",
+    nargs="?",
+)
+args = parser.parse_args()
+
 sense = SenseHat()
 
 # Display mode: True for temperature, False for humidity
-display_temp = True
+display_temp = True if args.p == "temp" else False
 rotation = 0  # Default rotation
 
 
@@ -65,6 +76,7 @@ def cleanup(signum=None, frame=None):
     sense.clear()
     print("Exiting...")
     sys.exit(0)
+
 
 signal.signal(signal.SIGTERM, cleanup)
 signal.signal(signal.SIGINT, cleanup)
