@@ -51,6 +51,14 @@ sense.stick.direction_down = handle_down
 sense.stick.direction_left = handle_left
 sense.stick.direction_middle = handle_middle
 
+
+def draw_mode_dot():
+    if display_temp:
+        sense.set_pixel(0, 0, 255, 0, 0)  # Red for temperature
+    else:
+        sense.set_pixel(0, 0, 0, 0, 255)  # Blue for humidity
+
+
 try:
     while True:
         if display_temp:
@@ -60,8 +68,10 @@ try:
         value_str = f"{value:.1f}"
         for char in value_str:
             sense.show_letter(char, text_colour=[255, 255, 255], back_colour=[0, 0, 0])
+            draw_mode_dot()
             time.sleep(0.7)
         sense.clear()
+        draw_mode_dot()
         time.sleep(3)
 except KeyboardInterrupt:
     sense.clear()
