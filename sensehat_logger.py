@@ -61,6 +61,7 @@ try:
         for char in value_str:
             sense.show_letter(char, text_colour=[255, 255, 255], back_colour=[0, 0, 0])
             time.sleep(0.7)
+        sense.clear()
         time.sleep(3)
 except KeyboardInterrupt:
     sense.clear()
