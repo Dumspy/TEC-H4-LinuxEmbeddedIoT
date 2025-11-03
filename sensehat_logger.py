@@ -2,6 +2,8 @@
 
 from sense_hat import SenseHat
 import time
+import signal
+import sys
 
 sense = SenseHat()
 
@@ -59,6 +61,14 @@ def draw_mode_dot():
         sense.set_pixel(0, 0, 0, 0, 255)  # Blue for humidity
 
 
+def cleanup(signum=None, frame=None):
+    sense.clear()
+    print("Exiting...")
+    sys.exit(0)
+
+signal.signal(signal.SIGTERM, cleanup)
+signal.signal(signal.SIGINT, cleanup)
+
 try:
     while True:
         if display_temp:
@@ -73,6 +83,5 @@ try:
         sense.clear()
         draw_mode_dot()
         time.sleep(3)
-except KeyboardInterrupt:
-    sense.clear()
-    print("Exiting...")
+except Exception:
+    cleanup()
