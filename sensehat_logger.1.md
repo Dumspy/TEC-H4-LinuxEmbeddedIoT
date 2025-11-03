@@ -60,7 +60,10 @@ Stop the service:
 ## FILES
 - sensehat_logger.py         Main script
 - sensehat_logger.service    Systemd service file
-- Makefile                   Build and setup instructions
+- Makefile                   Build and setup instructions.
 
----
-This README is formatted for use as a man page. For manual installation or troubleshooting, see the Makefile and comments in sensehat_logger.py.
+## SEE ALSO
+sense-hat(1), systemd(1)
+
+## AUTHOR
+Felix Berger.
