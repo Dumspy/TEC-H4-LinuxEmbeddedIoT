@@ -3,63 +3,57 @@ import time
 
 sense = SenseHat()
 
-# Initial dot position
-x, y = 0, 0
-DOT_COLOR = (255, 0, 0)
-BG_COLOR = (0, 0, 0)
+# Display mode: True for temperature, False for humidity
+display_temp = True
+rotation = 0  # Default rotation
 
-
-# Clamp function to keep dot within bounds
-def clamp(val, min_val=0, max_val=7):
-    return max(min_val, min(max_val, val))
-
-
-def draw_dot():
-    sense.clear(BG_COLOR)
-    sense.set_pixel(x, y, *DOT_COLOR)
-
-
-def move_up(event):
-    global y
+# Joystick event handlers
+def handle_up(event):
+    global rotation
     if event.action != "released":
-        y = clamp(y - 1)
-        draw_dot()
+        rotation = 0
+        sense.set_rotation(rotation)
 
-
-def move_down(event):
-    global y
+def handle_right(event):
+    global rotation
     if event.action != "released":
-        y = clamp(y + 1)
-        draw_dot()
+        rotation = 60
+        sense.set_rotation(rotation)
 
-
-def move_left(event):
-    global x
+def handle_down(event):
+    global rotation
     if event.action != "released":
-        x = clamp(x - 1)
-        draw_dot()
+        rotation = 90
+        sense.set_rotation(rotation)
 
-
-def move_right(event):
-    global x
+def handle_left(event):
+    global rotation
     if event.action != "released":
-        x = clamp(x + 1)
-        draw_dot()
+        rotation = 160
+        sense.set_rotation(rotation)
 
+def handle_middle(event):
+    global display_temp
+    if event.action != "released":
+        display_temp = not display_temp
 
-sense.stick.direction_up = move_up
-sense.stick.direction_down = move_down
-sense.stick.direction_left = move_left
-sense.stick.direction_right = move_right
-
-draw_dot()
+sense.stick.direction_up = handle_up
+sense.stick.direction_right = handle_right
+sense.stick.direction_down = handle_down
+sense.stick.direction_left = handle_left
+sense.stick.direction_middle = handle_middle
 
 try:
     while True:
-        temp = sense.get_temperature()
-        humidity = sense.get_humidity()
-        print(f"Temperature: {temp:.2f} C, Humidity: {humidity:.2f} %")
-        time.sleep(5)
+        if display_temp:
+            value = sense.get_temperature()
+            text = f"Temp: {value:.1f}C"
+        else:
+            value = sense.get_humidity()
+            text = f"Humidity: {value:.1f}%"
+        sense.show_message(text, scroll_speed=0.08, text_colour=[255,255,255], back_colour=[0,0,0])
+        time.sleep(1)
 except KeyboardInterrupt:
-    sense.clear()  # Turn off LEDs on exit
+    sense.clear()
     print("Exiting...")
+
